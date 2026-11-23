@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AlotradosDLE</title>
+<style>
+:root{
+  /* Pon aquí el nombre de tu imagen (guardada en la misma carpeta que este HTML) o su enlace/Base64 */
+  --bg-img: url('/fondo.jpg');
+
+--bg:#0d1326;
+  --card:rgba(15, 22, 44, 0.58);
+  --text:#ffffff;
+  --muted:#cbd5e1;
+  --line:rgba(186, 230, 253, 0.30);
+  --accent:#38bdf8;
+  --pink:#f472b6;
+  --violet:#a78bfa;
+  --ok:#0ea5e9;
+  --bad:#f43f5e;
+  --okt:#ffffff;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  color-scheme:dark;
+}
+
+html{
+  scroll-padding-top:env(safe-area-inset-top,0px);
+  background:#16203c;
+}
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  color:var(--text);
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  line-height:1.45;
+  min-height:100vh;
+  background:transparent;
+}
+
+/* ===== Fondo ilustrado encuadrado para que se vean el cielo y los personajes ===== */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-2;
+  background:var(--bg-img) center 72%/cover no-repeat;
+  filter:saturate(1.08) contrast(1.02);
+}
+
+/* Atmósfera suave que respeta los colores pastel del cielo y da contraste al texto */
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  background:
+    linear-gradient(180deg, rgba(15,23,42,.34) 0%, rgba(18,26,52,.44) 45%, rgba(12,18,38,.74) 100%),
+    radial-gradient(750px 420px at 15% 10%, rgba(56,189,248,.22), transparent 60%),
+    radial-gradient(750px 420px at 88% 18%, rgba(244,114,182,.22), transparent 60%),
+    radial-gradient(700px 420px at 50% 100%, rgba(129,140,248,.25), transparent 60%);
+}
+
+.wrap{
+  position:relative;
+  z-index:1;
+  max-width:920px;
+  margin:0 auto;
+  padding:28px 16px 52px;
+}
+
+header{
+  text-align:center;
+  margin-bottom:22px;
+}
+
+.badge{
+  display:inline-block;
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:#fff;
+  padding:6px 15px;
+  border-radius:999px;
+  background:linear-gradient(90deg, rgba(56,189,248,.35), rgba(244,114,182,.35));
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.32);
+  box-shadow:0 4px 16px rgba(15,23,42,.25);
+  margin-bottom:12px;
+}
+
+h1{
+  margin:0;
+  font-size:clamp(34px,8vw,56px);
+  font-weight:900;
+  letter-spacing:-.03em;
+  color:#fff;
+  text-shadow:0 3px 22px rgba(15,23,42,.65), 0 0 36px rgba(56,189,248,.45);
+}
+
+h1 span{
+  background:linear-gradient(90deg, #7dd3fc 0%, #c084fc 50%, #f472b6 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  filter:drop-shadow(0 2px 12px rgba(15,23,42,.55));
+}
+
+header p{
+  display:inline-block;
+  margin:10px auto 0;
+  padding:6px 16px;
+  border-radius:999px;
+  background:rgba(15, 23, 42, 0.42);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.18);
+  color:#f8fafc;
+  font-size:14.5px;
+  text-shadow:0 1px 6px rgba(0,0,0,.45);
+}
+
+.search{
+  position:relative;
+  max-width:520px;
+  margin:0 auto 14px;
+}
+
+.row{
+  display:flex;
+  gap:8px;
+}
+
+input{
+  flex:1;
+  min-width:0;
+  font:inherit;
+  padding:14px 16px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.28);
+  background:rgba(15, 22, 44, 0.72);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  color:#fff;
+  box-shadow:0 8px 24px rgba(10,15,30,.32);
+  transition:border-color .2s, box-shadow .2s, background .2s;
+}
+
+input::placeholder{color:#94a3b8}
+
+input:focus{
+  outline:none;
+  border-color:#7dd3fc;
+  background:rgba(15, 22, 44, 0.85);
+  box-shadow:0 0 0 3px rgba(56,189,248,.32), 0 8px 24px rgba(10,15,30,.4);
+}
+
+button{
+  font:inherit;
+  font-weight:700;
+  padding:14px 20px;
+  border:0;
+  border-radius:14px;
+  background:linear-gradient(135deg, #38bdf8 0%, #818cf8 52%, #f472b6 100%);
+  color:#fff;
+  cursor:pointer;
+  text-shadow:0 1px 4px rgba(15,23,42,.35);
+  box-shadow:0 6px 20px rgba(56,189,248,.38);
+  transition:transform .15s, box-shadow .15s, filter .15s;
+}
+
+button:hover:not(:disabled){
+  transform:translateY(-1px);
+  filter:brightness(1.08);
+  box-shadow:0 8px 24px rgba(244,114,182,.42);
+}
+
+button:disabled{
+  opacity:.5;
+  cursor:not-allowed;
+}
+
+button.ghost{
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(125,211,252,.55);
+  box-shadow:none;
+  color:#fff;
+}
+
+button.ghost:hover:not(:disabled){
+  background:rgba(56,189,248,.22);
+}
+
+.sug{
+  position:absolute;
+  left:0;
+  right:0;
+  top:100%;
+  margin-top:6px;
+  background:rgba(15, 22, 44, 0.94);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  border:1px solid var(--line);
+  border-radius:14px;
+  max-height:260px;
+  overflow:auto;
+  z-index:10;
+  display:none;
+  box-shadow:0 14px 34px rgba(7,11,25,.55);
+}
+
+.sug div{
+  padding:11px 15px;
+  cursor:pointer;
+  transition:background .12s;
+}
+
+.sug div:hover,.sug div.on{
+  background:linear-gradient(90deg, rgba(56,189,248,.28), rgba(244,114,182,.24));
+}
+
+.err{
+  color:#fda4af;
+  font-size:14px;
+  font-weight:600;
+  text-align:center;
+  min-height:22px;
+  margin-bottom:8px;
+  text-shadow:0 1px 8px rgba(15,23,42,.8);
+}
+
+.card{
+  background:var(--card);
+  backdrop-filter:blur(16px) saturate(135%);
+  -webkit-backdrop-filter:blur(16px) saturate(135%);
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:18px;
+  margin-bottom:16px;
+  box-shadow:0 14px 40px rgba(8, 12, 28, 0.48), 0 1px 0 rgba(255,255,255,.12) inset;
+}
+
+.meta{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  color:#e2e8f0;
+  font-size:14px;
+  font-weight:500;
+  margin-bottom:12px;
+}
+
+.meta #next{
+  color:#fbcfe8;
+  font-variant-numeric:tabular-nums;
+}
+
+.scroll{overflow-x:auto}
+
+table{
+  width:100%;
+  min-width:700px;
+  border-collapse:separate;
+  border-spacing:6px;
+}
+
+th{
+  font-size:12px;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  color:#bae6fd;
+  font-weight:700;
+  padding:4px;
+}
+
+td{
+  text-align:center;
+  padding:12px 6px;
+  border-radius:10px;
+  font-size:14px;
+  font-weight:600;
+  color:var(--okt);
+  animation:pop .4s ease both;
+}
+
+td.n{
+  background:rgba(255,255,255,.08);
+  color:#fff;
+  text-align:left;
+  padding-left:12px;
+  border:1px solid rgba(186,230,253,.24);
+  font-weight:700;
+}
+
+td.y{
+  background:linear-gradient(135deg, #0ea5e9, #3b82f6);
+  box-shadow:0 0 16px rgba(14,165,233,.45);
+  border:1px solid rgba(186,230,253,.35);
+}
+
+td.x{
+  background:linear-gradient(135deg, #f43f5e, #e11d48);
+  box-shadow:0 0 14px rgba(244,63,94,.35);
+  border:1px solid rgba(253,164,175,.3);
+}
+
+td:nth-child(2){animation-delay:.05s}
+td:nth-child(3){animation-delay:.15s}
+td:nth-child(4){animation-delay:.25s}
+td:nth-child(5){animation-delay:.35s}
+td:nth-child(6){animation-delay:.45s}
+td:nth-child(7){animation-delay:.55s}
+
+@keyframes pop{
+  from{opacity:0;transform:scale(.85)}
+  to{opacity:1;transform:none}
+}
+
+.empty{
+  text-align:center;
+  color:#cbd5e1;
+  padding:28px 8px;
+}
+
+.msg{
+  text-align:center;
+  margin:14px 0;
+}
+
+.win{
+  border-color:rgba(125,211,252,.55);
+  box-shadow:0 0 40px rgba(56,189,248,.32), 0 0 24px rgba(244,114,182,.22);
+  background:linear-gradient(135deg, rgba(14,165,233,.28), rgba(168,85,247,.24), rgba(244,114,182,.26));
+}
+
+.win h2{
+  font-size:26px;
+  background:linear-gradient(90deg, #7dd3fc, #f9a8d4);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+
+.hint{
+  display:table;
+  margin:18px auto 0;
+  padding:6px 16px;
+  border-radius:999px;
+  background:rgba(15, 23, 42, 0.52);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.16);
+  text-align:center;
+  color:#e2e8f0;
+  font-size:13px;
+}
+
+@media (max-width:600px){
+  body::before{
+    background-position:62% 75%;
+  }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="badge">Adivinanza diaria</div>
+  <h1>Alotrados<span>DLE</span></h1>
+  <p>Adivina al personaje del día. Cada día hay uno nuevo.</p>
+</header>
+
+<div class="search">
+  <div class="row">
+    <input id="q" type="text" placeholder="Escribe el nombre de un personaje…" autocomplete="off" aria-label="Personaje">
+    <button id="go">Probar</button>
+  </div>
+  <div class="sug" id="sug"></div>
+</div>
+<div class="err" id="err"></div>
+
+<div class="card">
+  <div class="meta"><span id="count">Intentos: 0</span><span id="next"></span></div>
+  <div class="scroll">
+    <table>
+      <thead><tr><th style="text-align:left">Personaje</th><th>Género</th><th>Original</th><th>Roleo</th><th>Miembro actual</th><th>Activo</th><th>Nacionalidad</th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+  <div class="empty" id="empty">Aún no has hecho ningún intento.</div>
+</div>
+
+<div class="card msg win" id="winbox" style="display:none">
+  <h2 style="margin:0 0 6px">¡Correcto!</h2>
+  <p id="wintext" style="margin:0 0 12px"></p>
+  <button class="ghost" id="share">Copiar resultado</button>
+</div>
+
+<p class="hint">Azul = coincide · Rojo = no coincide</p>
+</div>
+
+<script>
+
+const PERSONAJES = [
+  { nombre:"Ness",   genero:"Masculino", original:true,  roleo:true,  miembroActual:true,  activo:true,  nacionalidad:"Colombia" },
+  { nombre:"Curioso",   genero:"Masculino",  original:false, roleo:true,  miembroActual:true,  activo:false, nacionalidad:"Colombia" },
+  { nombre:"Ken",  genero:"Masculino", original:true,  roleo:true, miembroActual:true, activo:true, nacionalidad:"Peru" },
+  { nombre:"Diego",genero:"Masculino",  original:true, roleo:false, miembroActual:true,  activo:true,  nacionalidad:"Mexico" },
+  { nombre:"Lazly", genero:"Masculino",      original:true,  roleo:true,  miembroActual:true, activo:true,  nacionalidad:"Mexico" },
+  { nombre:"Poko",  genero:"Masculino", original:false, roleo:false,  miembroActual:true,  activo:false,  nacionalidad:"Mexico" },
+  { nombre: "Ij", genero: "Femenino", original: true, roleo: true, miembroActual: false, activo: false, nacionalidad: "Chile"},
+  { nombre: "Coketas", genero: "Masculino", original: false, roleo: false, miembroActual: false, activo: false, Nacionalidad: "Desconocida"},
+  { nombre: "PuertoRiqueña", genero: "Femenino", original: false, roleo: false, miembroActual: false, activo: false, Nacionalidad: "Puerto Rico"}
+];
+
+const PAISES_LATAM = ["Argentina","Bolivia","Brasil","Chile","Colombia","Costa Rica","Cuba","Ecuador","El Salvador","Guatemala","Honduras","México","Nicaragua","Panamá","Paraguay","Perú","República Dominicana","Uruguay","Venezuela", "Puerto Rico", "Desconocida"];
+
+/* Fecha de inicio del juego (el día 1 es este). Cámbiala si quieres. */
+const FECHA_INICIO = "2026-11-06";
+const SEED = 20261106; /* no la cambies una vez publicado, o cambiarán los personajes diarios */
+
+/* ---------------- lógica ---------------- */
+PERSONAJES.forEach(p=>{ if(!PAISES_LATAM.includes(p.nacionalidad)) console.warn("País no latinoamericano o mal escrito:", p.nombre, p.nacionalidad); });
+
+const $ = id => document.getElementById(id);
+const sb = v => v ? "Sí" : "No";
+const COLS = [
+  ["genero", p=>p.genero],
+  ["original", p=>sb(p.original)],
+  ["roleo", p=>sb(p.roleo)],
+  ["miembroActual", p=>sb(p.miembroActual)],
+  ["activo", p=>sb(p.activo)],
+  ["nacionalidad", p=>p.nacionalidad]
+];
+
+function hoy(){ const d=new Date(); return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
+function claveDia(d){ return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function numeroDia(){ const [y,m,d]=FECHA_INICIO.split("-").map(Number); return Math.round((hoy()-new Date(y,m-1,d))/864e5); }
+function rng(a){ return function(){ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+function elegido(){
+  const idx = PERSONAJES.map((_,i)=>i), r = rng(SEED);
+  for(let i=idx.length-1;i>0;i--){ const j=Math.floor(r()*(i+1)); [idx[i],idx[j]]=[idx[j],idx[i]]; }
+  const n = ((numeroDia() % idx.length) + idx.length) % idx.length;
+  return PERSONAJES[idx[n]];
+}
+
+const OBJ = elegido();
+const KEY = "alotradosdle-v1";
+let estado = { dia: claveDia(hoy()), intentos: [] };
+try { const s = JSON.parse(localStorage.getItem(KEY)); if(s && s.dia===estado.dia && Array.isArray(s.intentos)) estado = s; } catch(e){}
+function guardar(){ try{ localStorage.setItem(KEY, JSON.stringify(estado)); }catch(e){} }
+
+function ganado(){ return estado.intentos.includes(OBJ.nombre); }
+
+function render(){
+  const body = $("rows"); body.innerHTML = "";
+  [...estado.intentos].reverse().forEach(nombre=>{
+    const p = PERSONAJES.find(x=>x.nombre===nombre); if(!p) return;
+    const tr = document.createElement("tr");
+    const n = document.createElement("td"); n.className="n"; n.textContent=p.nombre; tr.appendChild(n);
+    COLS.forEach(([k,f])=>{
+      const td=document.createElement("td"); td.textContent=f(p);
+      td.className = f(p)===f(OBJ) ? "y":"x"; tr.appendChild(td);
+    });
+    body.appendChild(tr);
+  });
+  $("empty").style.display = estado.intentos.length ? "none":"block";
+  $("count").textContent = "Intentos: " + estado.intentos.length;
+  const w = ganado();
+  $("winbox").style.display = w ? "block":"none";
+  if(w) $("wintext").textContent = "El personaje de hoy era " + OBJ.nombre + ". Lo lograste en " + estado.intentos.length + (estado.intentos.length===1?" intento.":" intentos.");
+  $("q").disabled = $("go").disabled = w;
+}
+
+function intentar(nombre){
+  $("err").textContent = "";
+  const p = PERSONAJES.find(x=>x.nombre.toLowerCase()===nombre.trim().toLowerCase());
+  if(!p){ $("err").textContent = "Ese personaje no existe en la lista."; return; }
+  if(estado.intentos.includes(p.nombre)){ $("err").textContent = "Ya probaste con ese personaje."; return; }
+  estado.intentos.push(p.nombre); guardar();
+  $("q").value=""; $("sug").style.display="none"; render();
+}
+
+/* autocompletado */
+let sel = -1, lista = [];
+function sugerir(){
+  const t = $("q").value.trim().toLowerCase(), box=$("sug");
+  lista = PERSONAJES.filter(p=>!estado.intentos.includes(p.nombre) && p.nombre.toLowerCase().includes(t)).slice(0,8);
+  box.innerHTML=""; sel=-1;
+  if(!t || !lista.length){ box.style.display="none"; return; }
+  lista.forEach((p,i)=>{ const d=document.createElement("div"); d.textContent=p.nombre; d.onmousedown=e=>{e.preventDefault(); intentar(p.nombre);}; box.appendChild(d); });
+  box.style.display="block";
+}
+$("q").addEventListener("input", sugerir);
+$("q").addEventListener("keydown", e=>{
+  const items=[...$("sug").children];
+  if(e.key==="ArrowDown"||e.key==="ArrowUp"){ e.preventDefault(); if(!items.length) return; sel=(sel+(e.key==="ArrowDown"?1:-1)+items.length)%items.length; items.forEach((d,i)=>d.classList.toggle("on",i===sel)); }
+  else if(e.key==="Enter"){ e.preventDefault(); intentar(sel>=0 ? lista[sel].nombre : (lista.length===1 ? lista[0].nombre : $("q").value)); }
+});
+$("q").addEventListener("blur", ()=>setTimeout(()=>$("sug").style.display="none",100));
+$("go").onclick = ()=>intentar(lista.length===1 ? lista[0].nombre : $("q").value);
+
+$("share").onclick = async ()=>{
+  const lineas = estado.intentos.map(n=>{ const p=PERSONAJES.find(x=>x.nombre===n); return COLS.map(([k,f])=>f(p)===f(OBJ)?"🟦":"🟥").join(""); });
+  const txt = "AlotradosDLE #"+(numeroDia()+1)+" — "+estado.intentos.length+" intentos\n"+lineas.join("\n");
+  try{ await navigator.clipboard.writeText(txt); $("share").textContent="¡Copiado!"; }catch(e){ $("share").textContent="No se pudo copiar"; }
+};
+
+/* cuenta regresiva */
+function tick(){
+  const m = new Date(); m.setHours(24,0,0,0);
+  let s = Math.max(0, Math.floor((m-new Date())/1000));
+  const h=String(Math.floor(s/3600)).padStart(2,"0"), mi=String(Math.floor(s%3600/60)).padStart(2,"0"), se=String(s%60).padStart(2,"0");
+  $("next").textContent = "Próximo personaje en " + h + ":" + mi + ":" + se;
+  if(s===0) location.reload();
+}
+tick(); setInterval(tick,1000);
+render();
+</script>
+</body>
+</html>
